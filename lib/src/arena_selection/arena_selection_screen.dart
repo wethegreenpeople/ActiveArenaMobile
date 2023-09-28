@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_template/src/arena_selection/models/Arena.dart';
 import 'package:game_template/src/arena_selection/utils/in_memory_arena_selection_utils.dart';
+import 'package:game_template/src/style/nav_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -23,9 +24,10 @@ class ArenaSelectionScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
+      bottomNavigationBar: NavBar(),
       body: ResponsiveScreen(
         squarishMainArea: Column(
-          children: const [
+          children: [
             Padding(
               padding: EdgeInsets.all(16),
               child: Center(
@@ -37,25 +39,22 @@ class ArenaSelectionScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50),
-            Row(children: [
-              Column(
-                children: [
-                  SizedBox.square(
-                    dimension: 150,
-                    child: Image(
-                        image: AssetImage('assets/images/sprites/player.png')),
-                  )
-                ],
-              ),
-              Column()
-            ]),
+            Column(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 150),
+                  child: Image(
+                      image: AssetImage('assets/images/sprites/player.png')),
+                )
+              ],
+            ),
           ],
         ),
         rectangularMenuArea: FilledButton(
           onPressed: () {
-            GoRouter.of(context).go('/');
+            GoRouter.of(context).go('/play/session/1');
           },
-          child: const Text('Back'),
+          child: const Text('Join Arena'),
         ),
       ),
     );
