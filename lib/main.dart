@@ -13,9 +13,12 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:game_template/constants.dart';
+import 'package:game_template/src/login/login_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
@@ -51,6 +54,11 @@ Future<void> main() async {
       stackTrace: record.stackTrace,
     );
   });
+
+  await Supabase.initialize(
+    url: Constants.supabaseUrl,
+    anonKey: Constants.supabaseAnnonKey,
+  );
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -131,7 +139,7 @@ class MyApp extends StatelessWidget {
       GoRoute(
           path: '/',
           builder: (context, state) =>
-              const MainMenuScreen(key: Key('main menu')),
+              LoginScreen(Supabase.instance.client, key: Key('login screen')),
           routes: [
             GoRoute(
                 path: 'play',
@@ -213,28 +221,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppLifecycleObserver(
-      child: MultiProvider(
+      child: provider.MultiProvider(
         providers: [
-          ChangeNotifierProvider(
+          provider.ChangeNotifierProvider(
             create: (context) {
               var progress = PlayerProgress(playerProgressPersistence);
               progress.getLatestFromStore();
               return progress;
             },
           ),
-          Provider<GamesServicesController?>.value(
+          provider.Provider<GamesServicesController?>.value(
               value: gamesServicesController),
-          Provider<AdsController?>.value(value: adsController),
-          ChangeNotifierProvider<InAppPurchaseController?>.value(
+          provider.Provider<AdsController?>.value(value: adsController),
+          provider.ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController),
-          Provider<SettingsController>(
+          provider.Provider<SettingsController>(
             lazy: false,
             create: (context) => SettingsController(
               persistence: settingsPersistence,
             )..loadStateFromPersistence(),
           ),
-          ProxyProvider2<SettingsController, ValueNotifier<AppLifecycleState>,
-              AudioController>(
+          provider.ProxyProvider2<SettingsController,
+              ValueNotifier<AppLifecycleState>, AudioController>(
             // Ensures that the AudioController is created on startup,
             // and not "only when it's needed", as is default behavior.
             // This way, music starts immediately.
@@ -248,7 +256,7 @@ class MyApp extends StatelessWidget {
             },
             dispose: (context, audio) => audio.dispose(),
           ),
-          Provider(
+          provider.Provider(
             create: (context) => Palette(),
           ),
         ],
