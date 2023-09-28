@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:game_template/src/style/palette.dart';
+import 'package:provider/provider.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -14,7 +16,10 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<Palette>();
+
     return NavigationBar(
+      backgroundColor: palette.backgroundLevelSelection,
       height: 75,
       labelBehavior: labelBehavior,
       selectedIndex: currentPageIndex,
@@ -25,17 +30,20 @@ class _NavBarState extends State<NavBar> {
       },
       destinations: const <Widget>[
         NavigationDestination(
-          icon: Icon(Icons.explore),
-          label: 'Explore',
+          icon: Icon(Icons.checklist),
+          label: 'Arenas',
         ),
         NavigationDestination(
-          icon: Icon(Icons.commute),
-          label: 'Commute',
+          icon: Icon(Icons.computer),
+          label: 'Barracks',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.bookmark),
-          icon: Icon(Icons.bookmark_border),
-          label: 'Saved',
+          icon: Icon(Icons.store),
+          label: 'Shop',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.handyman),
+          label: 'Craft',
         ),
       ],
     );
