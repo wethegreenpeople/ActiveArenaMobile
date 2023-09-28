@@ -32,6 +32,8 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   flame_tiled: ^1.14.1
   supabase_flutter: ^1.10.19
+  flutter_login: ^4.2.1
+  mockito: ^5.4.2
 
 dev_dependencies:
   flutter_lints: ^2.0.2
