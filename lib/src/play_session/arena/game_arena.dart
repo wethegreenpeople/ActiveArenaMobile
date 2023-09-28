@@ -17,7 +17,7 @@ class GameArena extends FlameGame {
   @override
   Future<void> onLoad() async {
     addAll([cameraComponent, world]);
-    debugMode = true;
+    debugMode = false;
 
     await super.onLoad();
   }
