@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:game_template/src/api_utils/fighter_api.dart';
 import 'package:game_template/src/arena_selection/models/Arena.dart';
 import 'package:game_template/src/arena_selection/utils/in_memory_arena_selection_utils.dart';
 import 'package:game_template/src/style/nav_bar.dart';
@@ -21,6 +22,7 @@ class ArenaSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     var arenaUtils = InMemoryArenaSelection();
+    final fighterApi = FighterApi();
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
@@ -52,6 +54,7 @@ class ArenaSelectionScreen extends StatelessWidget {
         ),
         rectangularMenuArea: FilledButton(
           onPressed: () {
+            fighterApi.createFighter();
             GoRouter.of(context).go('/play/session/1');
           },
           child: const Text('Join Arena'),

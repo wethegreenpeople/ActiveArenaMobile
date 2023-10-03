@@ -8,6 +8,8 @@ import 'game_arena_world.dart';
 
 class GameArena extends FlameGame {
   late final CameraComponent cameraComponent;
+
+  @override
   final GameArenaWorld world;
 
   GameArena() : world = GameArenaWorld() {

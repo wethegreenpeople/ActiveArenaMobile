@@ -43,6 +43,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   late DateTime _startOfPlay;
 
+  final _gameArena = GameArena();
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
@@ -60,21 +62,20 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         floatingActionButton: FloatingButton(),
         body: Stack(
           children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Row(
-                    children: [
-                      PlayersCard(),
-                      PlayersCard(),
-                      PlayersCard(),
-                      PlayersCard()
-                    ],
-                  ),
-                  Expanded(child: GameWidget(game: GameArena()))
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SafeArea(
+                    child: Row(
+                  children: [
+                    PlayersCard(),
+                    PlayersCard(),
+                    PlayersCard(),
+                    PlayersCard()
+                  ],
+                )),
+                Expanded(child: GameWidget(game: _gameArena))
+              ],
             ),
             SizedBox.expand(
               child: Visibility(

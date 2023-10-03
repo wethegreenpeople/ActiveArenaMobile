@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:game_template/src/api_utils/fighter_api.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,8 +8,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class LoginScreen extends StatelessWidget {
   static final _log = Logger('LoginScreen');
   final SupabaseClient _supabase;
+  final FighterApi _fighterApi = FighterApi();
 
-  const LoginScreen(SupabaseClient superbaseClient, {Key? key})
+  LoginScreen(SupabaseClient superbaseClient, {Key? key})
       : _supabase = superbaseClient,
         super(key: key);
 
@@ -59,6 +61,8 @@ class LoginScreen extends StatelessWidget {
       _log.info(_.toString());
       return "Unable to create user";
     }
+
+    _fighterApi.createFighter();
 
     return null;
   }

@@ -8,4 +8,9 @@ abstract class Constants {
     'SUPABASE_ANON',
     defaultValue: '',
   );
+
+  static const String apiUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: '',
+  );
 }

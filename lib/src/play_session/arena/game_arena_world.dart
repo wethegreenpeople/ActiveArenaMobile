@@ -43,8 +43,8 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   @override
   void onGameResize(Vector2 size) {
-    super.onGameResize(size);
     setCameraBounds(size);
+    super.onGameResize(size);
   }
 
   void setCameraBounds(Vector2 gameSize) {

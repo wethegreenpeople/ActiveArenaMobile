@@ -10,7 +10,7 @@ class FloatingButton extends StatelessWidget {
     return SpeedDial(
       icon: Icons.more_horiz,
       activeIcon: Icons.close,
-      mini: true,
+      mini: false,
       children: [
         SpeedDialChild(
           child: const Icon(Icons.exit_to_app),
