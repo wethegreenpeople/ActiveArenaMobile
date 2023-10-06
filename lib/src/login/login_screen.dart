@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:game_template/src/api_utils/fighter_api.dart';
+import 'package:game_template/src/api_utils/fighter/fighter_api.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -35,13 +35,15 @@ class LoginScreen extends StatelessWidget {
         email: data.name,
         password: data.password,
       );
-
-      return null;
     } on AuthException catch (_, ex) {
       _log.info("Unable to login user ${data.name}");
       _log.info(_.toString());
       return "Unable to login";
     }
+
+    var fighters = await _fighterApi.getFighters();
+
+    return null;
   }
 
   Future<String?> _signupUser(SignupData data) async {
