@@ -22,7 +22,6 @@ class ArenaSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     var arenaUtils = InMemoryArenaSelection();
-    final fighterApi = FighterApi();
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
@@ -54,7 +53,6 @@ class ArenaSelectionScreen extends StatelessWidget {
         ),
         rectangularMenuArea: FilledButton(
           onPressed: () {
-            fighterApi.createFighter();
             GoRouter.of(context).go('/play/session/1');
           },
           child: const Text('Join Arena'),
