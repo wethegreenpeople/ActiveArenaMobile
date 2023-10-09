@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:game_template/src/api_utils/fighter/fighter_api.dart';
+import 'package:game_template/src/api_utils/fighter/fighter_model.dart';
 import 'package:game_template/src/arena_selection/models/Arena.dart';
 import 'package:game_template/src/arena_selection/utils/in_memory_arena_selection_utils.dart';
 import 'package:game_template/src/style/nav_bar.dart';
@@ -22,35 +23,21 @@ class ArenaSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     var arenaUtils = InMemoryArenaSelection();
+    final FighterApi fighterApi = FighterApi();
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
       bottomNavigationBar: NavBar(),
       body: ResponsiveScreen(
-        squarishMainArea: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(
-                child: Text(
-                  'Robert(o)',
-                  style:
-                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
-                ),
-              ),
-            ),
-            SizedBox(height: 50),
-            Column(
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 150),
-                  child: Image(
-                      image: AssetImage('assets/images/sprites/player.png')),
-                )
-              ],
-            ),
-          ],
-        ),
+        squarishMainArea: FutureBuilder(
+            future: fighterApi.getFighters(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return _fighterSelection(snapshot.data as List<Fighter>);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
         rectangularMenuArea: FilledButton(
           onPressed: () {
             GoRouter.of(context).go('/play/session/1');
@@ -58,6 +45,32 @@ class ArenaSelectionScreen extends StatelessWidget {
           child: const Text('Join Arena'),
         ),
       ),
+    );
+  }
+
+  Widget _fighterSelection(List<Fighter> fighters) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(
+            child: Text(
+              fighters[0].name!,
+              style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+            ),
+          ),
+        ),
+        SizedBox(height: 50),
+        Column(
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 150),
+              child:
+                  Image(image: AssetImage('assets/images/sprites/player.png')),
+            )
+          ],
+        ),
+      ],
     );
   }
 }
