@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-class PlayersCard extends StatefulWidget {
-  const PlayersCard({Key? key}) : super(key: key);
+import '../../api_utils/fighter/fighter_model.dart';
 
-  @override
-  State<PlayersCard> createState() => _PlayersCardState();
-}
+class PlayersCard extends StatelessWidget {
+  final Fighter? fighter;
+  const PlayersCard({this.fighter, Key? key}) : super(key: key);
 
-class _PlayersCardState extends State<PlayersCard> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -27,7 +25,7 @@ class _PlayersCardState extends State<PlayersCard> {
         )),
         Padding(
           padding: EdgeInsets.all(5),
-          child: Text("Robert(o)"),
+          child: Text(fighter?.name ?? '???'),
         )
       ]),
     ));

@@ -24,6 +24,7 @@ class ArenaSelectionScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     var arenaUtils = InMemoryArenaSelection();
     final FighterApi fighterApi = FighterApi();
+    Fighter? selectedFighter;
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
@@ -33,14 +34,16 @@ class ArenaSelectionScreen extends StatelessWidget {
             future: fighterApi.getFighters(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return _fighterSelection(snapshot.data as List<Fighter>);
+                return _fighterSelection(snapshot.data as List<Fighter>, () {
+                  selectedFighter = snapshot.data![0];
+                });
               } else {
                 return Center(child: CircularProgressIndicator());
               }
             }),
         rectangularMenuArea: FilledButton(
           onPressed: () {
-            GoRouter.of(context).go('/play/session/1');
+            GoRouter.of(context).go('/play/session/1', extra: selectedFighter);
           },
           child: const Text('Join Arena'),
         ),
@@ -48,7 +51,8 @@ class ArenaSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _fighterSelection(List<Fighter> fighters) {
+  Widget _fighterSelection(List<Fighter> fighters, Function onSelect) {
+    onSelect();
     return Column(
       children: [
         Padding(

@@ -21,6 +21,7 @@ import 'package:provider/provider.dart' as provider;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/ads/ads_controller.dart';
+import 'src/api_utils/fighter/fighter_model.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
 import 'src/games_services/games_services.dart';
@@ -158,6 +159,7 @@ class MyApp extends StatelessWidget {
                         key: ValueKey('level'),
                         child: PlaySessionScreen(
                           key: const Key('play session'),
+                          usersFighter: state.extra as Fighter?,
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );

@@ -15,6 +15,7 @@ import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
+import '../api_utils/fighter/fighter_model.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../game_internals/level_state.dart';
@@ -26,7 +27,8 @@ import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
-  const PlaySessionScreen({super.key});
+  final Fighter? usersFighter;
+  const PlaySessionScreen({Key? key, this.usersFighter}) : super(key: key);
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -48,6 +50,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final Fighter? usersFighter = widget.usersFighter;
 
     return MultiProvider(
       providers: [
@@ -65,10 +68,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SafeArea(
+                SafeArea(
                     child: Row(
                   children: [
-                    PlayersCard(),
+                    PlayersCard(
+                      fighter: usersFighter,
+                    ),
                     PlayersCard(),
                     PlayersCard(),
                     PlayersCard()
