@@ -41,8 +41,6 @@ class LoginScreen extends StatelessWidget {
       return "Unable to login";
     }
 
-    var fighters = await _fighterApi.getFighters();
-
     return null;
   }
 
