@@ -1,5 +1,5 @@
 class Fighter {
-  final String name;
+  final String? name;
   final int health;
   final String id;
 
