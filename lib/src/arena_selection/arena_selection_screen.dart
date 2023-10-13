@@ -5,14 +5,16 @@
 import 'package:flutter/material.dart';
 import 'package:game_template/src/api_utils/fighter/fighter_api.dart';
 import 'package:game_template/src/api_utils/fighter/fighter_model.dart';
-import 'package:game_template/src/arena_selection/models/Arena.dart';
+import 'package:game_template/src/arena_selection/utils/api_arena_selection_utils.dart';
 import 'package:game_template/src/arena_selection/utils/in_memory_arena_selection_utils.dart';
+import 'package:game_template/src/play_session/models/join_arena.dart';
 import 'package:game_template/src/style/nav_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../play_session/models/arena.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
@@ -22,7 +24,7 @@ class ArenaSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    var arenaUtils = InMemoryArenaSelection();
+    var arenaUtils = ApiArenaSelection();
     final FighterApi fighterApi = FighterApi();
     Fighter? selectedFighter;
 
@@ -42,8 +44,11 @@ class ArenaSelectionScreen extends StatelessWidget {
               }
             }),
         rectangularMenuArea: FilledButton(
-          onPressed: () {
-            GoRouter.of(context).go('/play/session/1', extra: selectedFighter);
+          onPressed: () async {
+            var arena = await arenaUtils.joinOpenArena(selectedFighter!.id);
+            GoRouter.of(context).go('/play/session/1',
+                extra:
+                    JoinArena(arena: arena, selectedFighter: selectedFighter!));
           },
           child: const Text('Join Arena'),
         ),

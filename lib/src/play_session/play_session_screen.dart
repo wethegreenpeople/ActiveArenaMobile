@@ -8,6 +8,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:game_template/src/play_session/arena/game_arena.dart';
 import 'package:game_template/src/play_session/floating_button/floating_button.dart';
+import 'package:game_template/src/play_session/models/join_arena.dart';
 import 'package:game_template/src/play_session/players_card/players_card.dart';
 import 'package:game_template/src/style/nav_bar.dart';
 import 'package:go_router/go_router.dart';
@@ -27,8 +28,9 @@ import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
-  final Fighter? usersFighter;
-  const PlaySessionScreen({Key? key, this.usersFighter}) : super(key: key);
+  final JoinArena joinArena;
+  const PlaySessionScreen({Key? key, required this.joinArena})
+      : super(key: key);
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -50,7 +52,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    final Fighter? usersFighter = widget.usersFighter;
+    final Fighter? usersFighter = widget.joinArena.selectedFighter;
 
     return MultiProvider(
       providers: [

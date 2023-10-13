@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:game_template/constants.dart';
 import 'package:game_template/src/login/login_screen.dart';
+import 'package:game_template/src/play_session/models/join_arena.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart' as provider;
@@ -159,7 +160,7 @@ class MyApp extends StatelessWidget {
                         key: ValueKey('level'),
                         child: PlaySessionScreen(
                           key: const Key('play session'),
-                          usersFighter: state.extra as Fighter?,
+                          joinArena: state.extra as JoinArena,
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );
