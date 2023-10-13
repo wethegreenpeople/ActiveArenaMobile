@@ -1,5 +1,5 @@
-import '../models/Arena.dart';
+import '../../play_session/models/arena.dart';
 
 abstract class ArenaSelectionUtils {
-  Future<List<Arena>> getOpenArenas();
+  Future<Arena> joinOpenArena(String fighterId);
 }
