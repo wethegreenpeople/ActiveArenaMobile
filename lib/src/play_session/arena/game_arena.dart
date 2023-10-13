@@ -2,17 +2,21 @@ import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:game_template/src/play_session/models/join_arena.dart';
 
+import '../models/arena.dart';
 import '../player/player.dart';
 import 'game_arena_world.dart';
 
 class GameArena extends FlameGame {
+  final JoinArena arena;
   late final CameraComponent cameraComponent;
 
   @override
   final GameArenaWorld world;
 
-  GameArena() : world = GameArenaWorld() {
+  GameArena(this.arena)
+      : world = GameArenaWorld(arena.arena, arena.selectedFighter.id) {
     cameraComponent = CameraComponent(world: world);
   }
 

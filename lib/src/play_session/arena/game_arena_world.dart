@@ -9,7 +9,9 @@ import 'package:game_template/src/play_session/models/arena.dart';
 import '../player/player.dart';
 
 class GameArenaWorld extends World with HasGameRef<GameArena> {
-  GameArenaWorld({super.children});
+  final Arena arena;
+  final String playerFighterId;
+  GameArenaWorld(this.arena, this.playerFighterId, {super.children});
 
   late Player player;
   late TiledComponent map;
@@ -17,18 +19,20 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
     map.tileMap.map.width * 32,
     map.tileMap.map.height * 32,
   );
-  late Arena arena;
 
   @override
   FutureOr<void> onLoad() async {
-    player = Player();
-
     map = await TiledComponent.load('desert_map.tmx', Vector2.all(32));
     add(map);
-    add(player);
-    add(Player());
+    for (var fighter in arena.fighters) {
+      var player = Player(fighter.x, fighter.y);
+      add(player);
 
-    gameRef.cameraComponent.follow(player);
+      if (fighter.fighterId == playerFighterId) {
+        this.player = player;
+        gameRef.cameraComponent.follow(player);
+      }
+    }
   }
 
   @override

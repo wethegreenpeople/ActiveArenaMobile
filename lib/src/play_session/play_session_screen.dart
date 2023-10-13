@@ -47,12 +47,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   late DateTime _startOfPlay;
 
-  final _gameArena = GameArena();
-
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    final Fighter? usersFighter = widget.joinArena.selectedFighter;
+    final Fighter usersFighter = widget.joinArena.selectedFighter;
+    final gameArena = GameArena(widget.joinArena);
 
     return MultiProvider(
       providers: [
@@ -81,7 +80,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     PlayersCard()
                   ],
                 )),
-                Expanded(child: GameWidget(game: _gameArena))
+                Expanded(child: GameWidget(game: gameArena))
               ],
             ),
             SizedBox.expand(
