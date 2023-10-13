@@ -1,17 +1,26 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:game_template/constants.dart';
 import 'package:game_template/src/play_session/arena/game_arena.dart';
 import 'package:game_template/src/play_session/models/arena.dart';
-
+import 'package:logging/logging.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 import '../player/player.dart';
 
 class GameArenaWorld extends World with HasGameRef<GameArena> {
-  final Arena arena;
+  Arena arena;
   final String playerFighterId;
-  GameArenaWorld(this.arena, this.playerFighterId, {super.children});
+  late final HubConnection hubConnection;
+  static final _log = Logger('PlaySessionScreen');
+  GameArenaWorld(this.arena, this.playerFighterId, {super.children}) {
+    hubConnection =
+        HubConnectionBuilder().withUrl("${Constants.apiUrl}/arenaHub").build();
+    hubConnection.on('UpdateArena', handleArenaUpdate);
+  }
 
   late Player player;
   late TiledComponent map;
@@ -22,6 +31,12 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   @override
   FutureOr<void> onLoad() async {
+    try {
+      await hubConnection.start();
+      hubConnection.invoke("JoinArena", args: [arena.id]);
+    } catch (e) {
+      var doot = e;
+    }
     map = await TiledComponent.load('desert_map.tmx', Vector2.all(32));
     add(map);
     for (var fighter in arena.fighters) {
@@ -37,7 +52,12 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   @override
   void update(double dt) {
-    player.move(Vector2(1, 0));
+    for (var fighter in arena.fighters) {
+      if (fighter.fighterId == playerFighterId) {
+        player.move(Vector2(
+            fighter.xDirection as double, fighter.yDirection as double));
+      }
+    }
     if (!gameRef.cameraComponent.canSee(player)) {
       player.move(Vector2(-600, 0));
     }
@@ -60,5 +80,10 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
         size.y - gameSize.y / 2,
       ),
     );
+  }
+
+  void handleArenaUpdate(List<dynamic>? arenaJson) {
+    arena = Arena.fromJson(arenaJson!.first!);
+    _log.info("Arena updated");
   }
 }

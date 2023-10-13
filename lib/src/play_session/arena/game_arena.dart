@@ -27,4 +27,10 @@ class GameArena extends FlameGame {
 
     await super.onLoad();
   }
+
+  @override
+  void onRemove() {
+    world.hubConnection.stop();
+    super.onRemove();
+  }
 }

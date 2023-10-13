@@ -5,6 +5,6 @@ import 'arena_selection_utils.dart';
 class InMemoryArenaSelection implements ArenaSelectionUtils {
   @override
   Future<Arena> joinOpenArena(String fighterId) async {
-    return Arena(fighters: []);
+    return Arena("", fighters: []);
   }
 }
