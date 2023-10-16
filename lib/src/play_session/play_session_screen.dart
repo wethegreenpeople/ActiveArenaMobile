@@ -70,17 +70,22 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SafeArea(
-                    child: Row(
-                  children: [
-                    PlayersCard(
-                      fighter: usersFighter,
-                    ),
-                    PlayersCard(),
-                    PlayersCard(),
-                    PlayersCard()
-                  ],
+                    child: Expanded(
+                  child: Row(
+                    children: [
+                      PlayersCard(
+                        fighter: usersFighter,
+                      ),
+                      PlayersCard(),
+                      PlayersCard(),
+                      PlayersCard()
+                    ],
+                  ),
                 )),
-                Expanded(child: GameWidget(game: gameArena))
+                Expanded(
+                    child: ClipRect(
+                  child: GameWidget(game: gameArena),
+                ))
               ],
             ),
             SizedBox.expand(

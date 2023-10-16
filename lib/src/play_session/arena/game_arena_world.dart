@@ -52,16 +52,6 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   @override
   void update(double dt) {
-    for (var fighter in arena.fighters) {
-      if (fighter.fighterId == playerFighterId) {
-        player.move(Vector2(
-            fighter.xDirection as double, fighter.yDirection as double));
-      }
-    }
-    if (!gameRef.cameraComponent.canSee(player)) {
-      player.move(Vector2(-600, 0));
-    }
-
     super.update(dt);
   }
 
@@ -84,6 +74,17 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   void handleArenaUpdate(List<dynamic>? arenaJson) {
     arena = Arena.fromJson(arenaJson!.first!);
-    _log.info("Arena updated");
+
+    for (var fighter in arena.fighters) {
+      if (fighter.fighterId == playerFighterId) {
+        var currentPos = player.position;
+        var newPos =
+            Vector2(size.x * ((fighter.x) / 100), size.y * (fighter.y) / 100);
+
+        var delta = Vector2(newPos.x - currentPos.x, newPos.y - currentPos.y);
+
+        player.move(delta);
+      }
+    }
   }
 }
