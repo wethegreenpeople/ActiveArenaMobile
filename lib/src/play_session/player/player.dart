@@ -7,8 +7,9 @@ import 'package:game_template/src/play_session/arena/game_arena.dart';
 class Player extends SpriteComponent with HasGameRef<GameArena> {
   final double startingX;
   final double staringY;
+  final String fighterId;
 
-  Player(this.startingX, this.staringY);
+  Player(this.startingX, this.staringY, this.fighterId);
 
   @override
   Future<void> onLoad() async {

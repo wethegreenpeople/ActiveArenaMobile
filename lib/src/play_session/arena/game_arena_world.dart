@@ -9,20 +9,26 @@ import 'package:game_template/src/play_session/arena/game_arena.dart';
 import 'package:game_template/src/play_session/models/arena.dart';
 import 'package:logging/logging.dart';
 import 'package:signalr_netcore/signalr_client.dart';
+import '../../api_utils/fighter/fighter_model.dart';
 import '../player/player.dart';
 
 class GameArenaWorld extends World with HasGameRef<GameArena> {
   Arena arena;
   final String playerFighterId;
+  final List<Fighter> fighters;
+  Function parentSetState;
   late final HubConnection hubConnection;
   static final _log = Logger('PlaySessionScreen');
-  GameArenaWorld(this.arena, this.playerFighterId, {super.children}) {
+  GameArenaWorld(
+      this.arena, this.playerFighterId, this.fighters, this.parentSetState,
+      {super.children}) {
     hubConnection =
         HubConnectionBuilder().withUrl("${Constants.apiUrl}/arenaHub").build();
     hubConnection.on('UpdateArena', handleArenaUpdate);
   }
 
   late Player player;
+  late List<Player?> players = [];
   late TiledComponent map;
   late Vector2 size = Vector2(
     map.tileMap.map.width * 32,
@@ -40,7 +46,8 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
     map = await TiledComponent.load('desert_map.tmx', Vector2.all(32));
     add(map);
     for (var fighter in arena.fighters) {
-      var player = Player(fighter.x, fighter.y);
+      var player = Player(fighter.x, fighter.y, fighter.fighterId);
+      players.add(player);
       add(player);
 
       if (fighter.fighterId == playerFighterId) {
@@ -76,14 +83,27 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
     arena = Arena.fromJson(arenaJson!.first!);
 
     for (var fighter in arena.fighters) {
-      if (fighter.fighterId == playerFighterId) {
-        var currentPos = player.position;
-        var newPos =
-            Vector2(size.x * ((fighter.x) / 100), size.y * (fighter.y) / 100);
+      var player = players.firstWhere(
+          (element) => element?.fighterId == fighter.fighterId,
+          orElse: () => null);
+      if (player == null) {
+        player = Player(fighter.x, fighter.y, fighter.fighterId);
+        players.add(player);
+        add(player);
+      }
+      var currentPos = player.position;
+      var newPos =
+          Vector2(size.x * ((fighter.x) / 100), size.y * (fighter.y) / 100);
 
-        var delta = Vector2(newPos.x - currentPos.x, newPos.y - currentPos.y);
+      var delta = Vector2(newPos.x - currentPos.x, newPos.y - currentPos.y);
 
-        player.move(delta);
+      player.move(delta);
+
+      if (fighters.length < 4 &&
+          !fighters.any((element) => element.id == fighter.fighterId)) {
+        fighters.add(
+            Fighter(id: fighter.fighterId, name: fighter.fighterId, health: 0));
+        parentSetState();
       }
     }
   }

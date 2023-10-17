@@ -51,7 +51,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final Fighter usersFighter = widget.joinArena.selectedFighter;
-    final gameArena = GameArena(widget.joinArena);
+    final List<Fighter> allFighters = List.empty();
+    final gameArena =
+        GameArena(widget.joinArena, allFighters, () => setState(() {}));
 
     return MultiProvider(
       providers: [
@@ -72,14 +74,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 SafeArea(
                     child: Expanded(
                   child: Row(
-                    children: [
-                      PlayersCard(
-                        fighter: usersFighter,
-                      ),
-                      PlayersCard(),
-                      PlayersCard(),
-                      PlayersCard()
-                    ],
+                    children: _buildPlayersCards(allFighters, usersFighter),
                   ),
                 )),
                 Expanded(
@@ -148,5 +143,20 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     if (!mounted) return;
 
     GoRouter.of(context).go('/play/won', extra: {'score': score});
+  }
+
+  List<Widget> _buildPlayersCards(
+      List<Fighter> fighters, Fighter usersFighter) {
+    final List<Widget> playersCards = [];
+    playersCards.add(PlayersCard(
+      fighter: usersFighter,
+    ));
+    for (var fighter in fighters) {
+      if (fighter.id == usersFighter.id) continue;
+      playersCards.add(PlayersCard(
+        fighter: fighter,
+      ));
+    }
+    return playersCards;
   }
 }
