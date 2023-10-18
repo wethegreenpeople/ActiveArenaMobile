@@ -1,5 +1,6 @@
 class FighterPosition {
   final String fighterId;
+  final String name;
   final double x;
   final double y;
   final int xDirection;
@@ -7,6 +8,7 @@ class FighterPosition {
 
   FighterPosition({
     required this.fighterId,
+    required this.name,
     required this.x,
     required this.y,
     required this.xDirection,
@@ -18,6 +20,7 @@ class FighterPosition {
       fighterId: json['fighterId'],
       x: (json['xLoc'] as int).toDouble(),
       y: (json['yLoc'] as int).toDouble(),
+      name: json['fighterName'],
       xDirection: json['xDirection'],
       yDirection: json['yDirection'],
     );

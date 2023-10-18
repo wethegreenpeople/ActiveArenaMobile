@@ -15,13 +15,9 @@ import '../player/player.dart';
 class GameArenaWorld extends World with HasGameRef<GameArena> {
   Arena arena;
   final String playerFighterId;
-  final List<Fighter> fighters;
-  Function parentSetState;
   late final HubConnection hubConnection;
   static final _log = Logger('PlaySessionScreen');
-  GameArenaWorld(
-      this.arena, this.playerFighterId, this.fighters, this.parentSetState,
-      {super.children}) {
+  GameArenaWorld(this.arena, this.playerFighterId, {super.children}) {
     hubConnection =
         HubConnectionBuilder().withUrl("${Constants.apiUrl}/arenaHub").build();
     hubConnection.on('UpdateArena', handleArenaUpdate);
@@ -37,12 +33,8 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   @override
   FutureOr<void> onLoad() async {
-    try {
-      await hubConnection.start();
-      hubConnection.invoke("JoinArena", args: [arena.id]);
-    } catch (e) {
-      var doot = e;
-    }
+    await hubConnection.start();
+    await hubConnection.invoke("JoinArena", args: [arena.id]);
     map = await TiledComponent.load('desert_map.tmx', Vector2.all(32));
     add(map);
     for (var fighter in arena.fighters) {
@@ -98,13 +90,6 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
       var delta = Vector2(newPos.x - currentPos.x, newPos.y - currentPos.y);
 
       player.move(delta);
-
-      if (fighters.length < 4 &&
-          !fighters.any((element) => element.id == fighter.fighterId)) {
-        fighters.add(
-            Fighter(id: fighter.fighterId, name: fighter.fighterId, health: 0));
-        parentSetState();
-      }
     }
   }
 }
