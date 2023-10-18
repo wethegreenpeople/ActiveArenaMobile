@@ -12,15 +12,12 @@ import 'game_arena_world.dart';
 class GameArena extends FlameGame {
   final JoinArena arena;
   late final CameraComponent cameraComponent;
-  final List<Fighter> allFighters;
-  Function parentSetState;
 
   @override
   final GameArenaWorld world;
 
-  GameArena(this.arena, this.allFighters, this.parentSetState)
-      : world = GameArenaWorld(arena.arena, arena.selectedFighter.id,
-            allFighters, parentSetState) {
+  GameArena(this.arena)
+      : world = GameArenaWorld(arena.arena, arena.selectedFighter.id) {
     cameraComponent = CameraComponent(world: world);
   }
 

@@ -10,6 +10,7 @@ import 'package:game_template/src/play_session/arena/game_arena.dart';
 import 'package:game_template/src/play_session/floating_button/floating_button.dart';
 import 'package:game_template/src/play_session/models/join_arena.dart';
 import 'package:game_template/src/play_session/players_card/players_card.dart';
+import 'package:game_template/src/play_session/players_card_row/players_card_row.dart';
 import 'package:game_template/src/style/nav_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -52,8 +53,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     final palette = context.watch<Palette>();
     final Fighter usersFighter = widget.joinArena.selectedFighter;
     final List<Fighter> allFighters = List.empty();
-    final gameArena =
-        GameArena(widget.joinArena, allFighters, () => setState(() {}));
+    final gameArena = GameArena(widget.joinArena);
 
     return MultiProvider(
       providers: [
@@ -72,11 +72,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SafeArea(
-                    child: Expanded(
-                  child: Row(
-                    children: _buildPlayersCards(allFighters, usersFighter),
-                  ),
-                )),
+                    child: PlayersCardRow(
+                        usersFighter, widget.joinArena.arena.id)),
                 Expanded(
                     child: ClipRect(
                   child: GameWidget(game: gameArena),
@@ -143,20 +140,5 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     if (!mounted) return;
 
     GoRouter.of(context).go('/play/won', extra: {'score': score});
-  }
-
-  List<Widget> _buildPlayersCards(
-      List<Fighter> fighters, Fighter usersFighter) {
-    final List<Widget> playersCards = [];
-    playersCards.add(PlayersCard(
-      fighter: usersFighter,
-    ));
-    for (var fighter in fighters) {
-      if (fighter.id == usersFighter.id) continue;
-      playersCards.add(PlayersCard(
-        fighter: fighter,
-      ));
-    }
-    return playersCards;
   }
 }
