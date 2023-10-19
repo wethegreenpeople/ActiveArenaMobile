@@ -1,6 +1,5 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
+import 'package:game_template/src/play_session/models/fighter_positions.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
@@ -26,7 +25,7 @@ class _PlayersCardRowState extends State<PlayersCardRow> {
   _PlayersCardRowState() {
     hubConnection =
         HubConnectionBuilder().withUrl("${Constants.apiUrl}/arenaHub").build();
-    hubConnection.on('UpdateArena', _handleArenaUpdate);
+    hubConnection.on('UpdateArenaFighters', _handleArenaUpdate);
   }
 
   @override
@@ -51,23 +50,28 @@ class _PlayersCardRowState extends State<PlayersCardRow> {
       ));
     }
 
-    for (var i = fighters.length; i < 3; i++) {
+    for (var i = fighters.length; i < 4; i++) {
       playersCards.add(PlayersCard());
     }
     return playersCards;
   }
 
   void _startConnection(String arenaId) async {
+    if (hubConnection.state == HubConnectionState.Connected ||
+        hubConnection.state == HubConnectionState.Connecting ||
+        allFighters.length == 4) return;
     await hubConnection.start();
     await hubConnection.invoke("JoinArena", args: [arenaId]);
   }
 
-  void _handleArenaUpdate(List<dynamic>? arenaJson) {
+  void _handleArenaUpdate(List<dynamic>? fightersJson) {
     print("UPDATE");
-    var arena = Arena.fromJson(arenaJson!.first!);
+    var fighters = fightersJson!.map((e) => FighterPosition.fromJson(e));
+
+    if (fighters.length == 4) hubConnection.stop();
 
     setState(() {
-      allFighters = arena.fighters
+      allFighters = fighters
           .map((e) => Fighter(id: e.fighterId, name: e.name, health: 0))
           .toList();
     });

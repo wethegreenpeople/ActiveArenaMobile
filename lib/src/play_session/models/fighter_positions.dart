@@ -18,8 +18,8 @@ class FighterPosition {
   factory FighterPosition.fromJson(Map<String, dynamic> json) {
     return FighterPosition(
       fighterId: json['fighterId'],
-      x: (json['xLoc'] as int).toDouble(),
-      y: (json['yLoc'] as int).toDouble(),
+      x: double.parse(json['xLoc'].toString()),
+      y: double.parse(json['xLoc'].toString()),
       name: json['fighterName'],
       xDirection: json['xDirection'],
       yDirection: json['yDirection'],

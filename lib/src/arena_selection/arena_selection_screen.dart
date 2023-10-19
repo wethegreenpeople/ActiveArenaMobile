@@ -35,7 +35,8 @@ class ArenaSelectionScreen extends StatelessWidget {
         squarishMainArea: FutureBuilder(
             future: fighterApi.getFighters(),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData &&
+                  (snapshot.data as List<Fighter>).isNotEmpty) {
                 return _fighterSelection(snapshot.data as List<Fighter>, () {
                   selectedFighter = snapshot.data![0];
                 });

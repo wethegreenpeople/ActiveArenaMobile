@@ -33,8 +33,11 @@ class GameArenaWorld extends World with HasGameRef<GameArena> {
 
   @override
   FutureOr<void> onLoad() async {
-    await hubConnection.start();
-    await hubConnection.invoke("JoinArena", args: [arena.id]);
+    if (hubConnection.state == HubConnectionState.Disconnected) {
+      await hubConnection.start();
+      await hubConnection.invoke("JoinArena", args: [arena.id]);
+    }
+
     map = await TiledComponent.load('desert_map.tmx', Vector2.all(32));
     add(map);
     for (var fighter in arena.fighters) {
